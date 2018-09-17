@@ -1,0 +1,127 @@
+
+
+Training Process
+
+Training data => update weights & biases => prediction/compute loss (loop)
+
+
+
+1) What is epoch ?
+
+Let's say, there are 50,000 training digits in this dataset. 
+We feed 100 of them into the training loop at each iteration so the system will have seen all the training digits once after 500 iterations. We call this an "epoch".
+
+
+2) Why do we need Train / Test Split ?
+
+To test the quality of the recognition in real-world conditions, we must use digits that the system has NOT seen during training. Otherwise, it could learn all the training digits by memorizing and still fail at recognising an "8 digit" that I just wrote in real world.
+
+Therefore, We split MNIST dataset into 40,000 training digits and
+10,000 test digits.
+
+
+3) Why do we need loss function ?
+
+To drive the training, we will define a loss function, i.e. a value representing how badly the system recognises the digits and try to minimise it. 
+The choice of a loss function will explained later. 
+
+(*What you see here is that the loss goes down on both the training and the test data as the training progresses: that is good. It means the neural network is learning.)
+
+
+4) Accuracy
+
+The accuracy is simply the % of correctly recognised digits. 
+This is computed both on the training and the test set. 
+You will see it go up if the training goes well.
+
+
+5) Input Features 
+
+Handwritten digits in the MNIST dataset are 28x28 pixel greyscale images. 
+The simplest approach for classifying them is to use the 28x28=784 pixels as inputs for a 1-layer neural network. 
+
+input = (number of samples x number of features)
+
+(number of samples x (28x28x1) => number of sample x 784 )
+
+
+6) Weights and bias
+
+Each "neuron" in a neural network does a weighted sum of all of its inputs, adds a constant called the "bias" and then feeds the result through some non-linear activation function.
+
+
+input image pixel vector = (n_sampl x 784)
+initial random weights = (784 x 10)
+random bias constant = 10 
+
+predict_y = (X.W+b)
+
+y_predict =(      X         .   W     ) +  b
+
+          =( n_sampl x 784) .(784 x 10) + 10
+
+          =(n_sampl x 10) + 10
+  
+Here we design a 1-layer neural network with 10 output neurons since we want to classify digits into 10 classes (0 to 9).
+
+output(y_predict) = n_sampl x 10 (labels) (digits 0 . . 9)
+
+
+7)Activation Function
+
+For a classification problem, an activation function that works well is softmax (or)sigmoid (or) relu (or) tanh,etc. 
+
+Eg, applying softmax on a vector is done by taking the exponential of each element and then normalising the vector (using any norm, for example the ordinary euclidean length of the vector).
+
+predict_y = softmax(X.W+b)
+
+
+8) Compute Cost/Loss 
+
+Now that our neural network produces predictions from input images, we need to measure how good they are, 
+i.e. the distance between what the network tells us and what we know to be the truth.
+Remember that we have true labels for all the images in this dataset.
+
+Any distance would work, the ordinary euclidian distance is fine 
+but for classification problems one distance, called the "cross-entropy" is more efficient.
+
+(eg. Mean Square Error, Euclidian distance, Cross Entropy, L2/L1 Regularization)
+
+
+9) One-hot Encoding
+
+"One-hot" encoding means that you represent the label "6" by using a vector of 10 values, all zeros but the 6th value which is 1.
+
+(eg. [0,0,0,0,0,1,0,0,0,0] represent = 6 digits in one-hot encode form)
+
+
+10) Model Training
+
+"Training" the neural network actually means using training images and labels to adjust weights and biases so as to minimise the cross-entropy loss function. 
+When trained the model reached minimal values cross-entropy (local minimum), 
+we'll achieve the updated trained weights and bias for real time recognition task.
+
+
+11) Learning Rate
+
+you cannot update your weights and biases by the whole length of the gradient at each iteration. 
+It would be like trying to get to the bottom of a valley while wearing seven-league boots.
+ You would be jumping from one side of the valley to the other. 
+To get to the bottom, you need to do smaller steps, 
+i.e. use only a fraction of the gradient, typically in the 1/1000th region. (lr = 0.001)
+We call this fraction the "learning rate".
+
+
+12) Training Process
+
+Training features and labels => loss function => gradient (partial derivatives) => steepest descent => update weights and biases => repeat with next mini-batch of training images and labels
+
+13) Why work with "mini-batches" of 100 images and labels ?
+
+You can definitely compute your gradient on just one example image and update the weights and biases immediately (it's called "stochastic gradient descent" in scientific literature).
+Doing so on 100 examples gives a gradient that better represents the constraints imposed by different example images and is therefore likely to converge towards the solution faster.
+The size of the mini-batch is an adjustable parameter though. 
+There is another, more technical reason: working with batches also means working with larger matrices and these are usually easier to optimise on GPUs.
+
+
+...............................................................................................................................................................................................
