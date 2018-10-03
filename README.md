@@ -3,6 +3,4 @@
 DeepLearning_with_Tensorflow
 
 
-# Acknowledgement
-- stanford.edu/class/cs20si
 
